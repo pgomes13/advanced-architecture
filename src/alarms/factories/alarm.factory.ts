@@ -1,8 +1,8 @@
+import { Alarm } from '@/alarms/domain/alarm';
+import { AlarmItem } from '@/alarms/domain/alarm-item';
+import { AlarmSeverity } from '@/alarms/domain/value-objects/alarm-severity';
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { Alarm } from '../alarm';
-import { AlarmItem } from '../alarm-item';
-import { AlarmSeverity } from '../value-objects/alarm-severity';
 
 @Injectable()
 export class AlarmFactory {
