@@ -1,3 +1,4 @@
+import { AlarmCreatedEvent } from '@/alarms/domain/events/alarm-created.event';
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Alarm } from '../alarm';
@@ -15,6 +16,7 @@ export class AlarmFactory {
 		alarm.triggeredAt = triggeredAt;
 		items.map((item) => new AlarmItem(randomUUID(), item.name, item.type)).forEach((item) => alarm.addAlarmItem(item));
 
+		alarm.apply(new AlarmCreatedEvent(alarm), { skipHandler: true });
 		return alarm;
 	}
 }
