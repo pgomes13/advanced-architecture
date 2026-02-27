@@ -1,3 +1,4 @@
+import { EventStore } from '@/shared/infrastructure/application/ports/event-store';
 import { EventDeserializer } from '@/shared/infrastructure/event-store/deserializers/event.deserializer';
 import { EventsBridge } from '@/shared/infrastructure/event-store/events-bridge';
 import { Module } from '@nestjs/common';
@@ -10,6 +11,17 @@ import { EventSerializer } from './event-store/serializers/event.serializer';
 
 @Module({
 	imports: [MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }], EVENT_STORE_CONNECTION)],
-	providers: [EventSerializer, EventStorePublisher, MongoEventStore, EventsBridge, EventDeserializer],
+	providers: [
+		EventSerializer,
+		EventStorePublisher,
+		MongoEventStore,
+		EventsBridge,
+		EventDeserializer,
+		{
+			provide: EventStore,
+			useExisting: MongoEventStore,
+		},
+	],
+	exports: [EventStore],
 })
 export class SharedInfrastructureModule {}

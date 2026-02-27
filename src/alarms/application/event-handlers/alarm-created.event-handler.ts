@@ -1,10 +1,10 @@
-import { SerializedEventPayload } from '@/shared/domain/interfaces/serializable-event';
 import { Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { SerializedEventPayload } from '../../../shared/domain/interfaces/serializable-event';
 import { AlarmCreatedEvent } from '../../domain/events/alarm-created.event';
 import { UpsertMaterializedAlarmRepository } from '../ports/upsert-materialized-alarm.repository';
 
-@EventsHandler(AlarmCreatedEvent) // 👈
+@EventsHandler(AlarmCreatedEvent)
 export class AlarmCreatedEventHandler implements IEventHandler<SerializedEventPayload<AlarmCreatedEvent>> {
 	private readonly logger = new Logger(AlarmCreatedEventHandler.name);
 
@@ -17,18 +17,13 @@ export class AlarmCreatedEventHandler implements IEventHandler<SerializedEventPa
 		// with the creation of the alarm. Otherwise, we could end up with an alarm that is not reflected
 		// in the read model (e.g. because the database operation fails).
 		// For more information, check out "Transactional inbox/outbox pattern".
-
-		try {
-			await this.upsertMaterializedAlarmRepository.upsert({
-				id: event.alarm.id,
-				name: event.alarm.name,
-				severity: event.alarm.severity.value,
-				triggeredAt: new Date(event.alarm.triggeredAt),
-				isAcknowledged: event.alarm.isAcknowledged,
-				items: event.alarm.items,
-			});
-		} catch (err) {
-			throw err;
-		}
+		await this.upsertMaterializedAlarmRepository.upsert({
+			id: event.alarm.id,
+			name: event.alarm.name,
+			severity: event.alarm.severity,
+			triggeredAt: new Date(event.alarm.triggeredAt),
+			isAcknowledged: event.alarm.isAcknowledged,
+			items: event.alarm.items,
+		});
 	}
 }

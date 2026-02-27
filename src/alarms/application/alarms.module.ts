@@ -1,3 +1,5 @@
+import { AcknowledgeAlarmCommandHandler } from '@/alarms/application/commands/acknowledge-alarm.command-handler';
+import { AlarmAcknowledgedEventHandler } from '@/alarms/application/event-handlers/alarm-acknowledged.event-handler';
 import { DynamicModule, Module, Type } from '@nestjs/common';
 import { AlarmFactory } from '../domain/factories/alarm.factory';
 import { AlarmsController } from '../presenters/http/alarms.controller';
@@ -8,7 +10,15 @@ import { GetAlarmsQueryHandler } from './queries/get-alarms.query-handler';
 
 @Module({
 	controllers: [AlarmsController],
-	providers: [AlarmsService, AlarmFactory, CreateAlarmCommandHandler, GetAlarmsQueryHandler, AlarmCreatedEventHandler],
+	providers: [
+		AlarmsService,
+		AlarmFactory,
+		CreateAlarmCommandHandler,
+		GetAlarmsQueryHandler,
+		AlarmCreatedEventHandler,
+		AcknowledgeAlarmCommandHandler,
+		AlarmAcknowledgedEventHandler,
+	],
 })
 export class AlarmsModule {
 	static withInfrastucture(infrastructureModule: Type | DynamicModule) {
