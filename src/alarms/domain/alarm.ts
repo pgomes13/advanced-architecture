@@ -24,7 +24,7 @@ export class Alarm extends VersionedAggregateRoot {
 		this.items.push(item);
 	}
 
-	[`on${AlarmCreatedEvent.name}`](event: SerializedEventPayload<AlarmCreatedEvent>) {
+	[`on${AlarmCreatedEvent?.name}`](event: SerializedEventPayload<AlarmCreatedEvent>) {
 		this.name = event.alarm.name;
 		this.severity = new AlarmSeverity(event.alarm.severity);
 		this.triggeredAt = new Date(event.alarm.triggeredAt);
