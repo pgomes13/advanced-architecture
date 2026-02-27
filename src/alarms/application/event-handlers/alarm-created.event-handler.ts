@@ -17,13 +17,18 @@ export class AlarmCreatedEventHandler implements IEventHandler<SerializedEventPa
 		// with the creation of the alarm. Otherwise, we could end up with an alarm that is not reflected
 		// in the read model (e.g. because the database operation fails).
 		// For more information, check out "Transactional inbox/outbox pattern".
-		await this.upsertMaterializedAlarmRepository.upsert({
-			id: event.alarm.id,
-			name: event.alarm.name,
-			severity: event.alarm.severity.value,
-			triggeredAt: new Date(event.alarm.triggeredAt),
-			isAcknowledged: event.alarm.isAcknowledged,
-			items: event.alarm.items,
-		});
+
+		try {
+			await this.upsertMaterializedAlarmRepository.upsert({
+				id: event.alarm.id,
+				name: event.alarm.name,
+				severity: event.alarm.severity.value,
+				triggeredAt: new Date(event.alarm.triggeredAt),
+				isAcknowledged: event.alarm.isAcknowledged,
+				items: event.alarm.items,
+			});
+		} catch (err) {
+			throw err;
+		}
 	}
 }

@@ -15,6 +15,7 @@ export class OrmUpsertMaterializedAlarmRepository implements UpsertMaterializedA
 	async upsert(alarm: Pick<AlarmReadModel, 'id'> & Partial<AlarmReadModel>): Promise<void> {
 		await this.alarmModel.findOneAndUpdate({ id: alarm.id }, alarm, {
 			upsert: true,
+			strict: false,
 		});
 	}
 }
